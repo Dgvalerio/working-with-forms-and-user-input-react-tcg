@@ -10,8 +10,7 @@ const SimpleInput = () => {
   const [enteredEmail, setEnteredEmail] = useState('');
   const [enteredEmailTouched, setEnteredEmailTouched] = useState(false);
 
-  const enteredEmailIsValid =
-    enteredEmail.trim().indexOf('@') >= 0 && enteredEmail.trim() !== '';
+  const enteredEmailIsValid = enteredEmail.includes('@');
   const emailInputIsInvalid = !enteredEmailIsValid && enteredEmailTouched;
 
   const formIsValid = enteredNameIsValid && enteredEmailIsValid;
@@ -70,9 +69,7 @@ const SimpleInput = () => {
           onBlur={emailInputBlurHandler}
         />
         {emailInputIsInvalid && (
-          <p className="error-text">
-            Email must not be empty and need contains &lsquo;@&rsquo;.
-          </p>
+          <p className="error-text">Please enter a valid e-mail.</p>
         )}
       </div>
       <div className="form-actions">
