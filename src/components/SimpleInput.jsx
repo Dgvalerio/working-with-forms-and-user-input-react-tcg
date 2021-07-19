@@ -7,24 +7,41 @@ const SimpleInput = () => {
   const enteredNameIsValid = enteredName.trim() !== '';
   const nameInputIsInvalid = !enteredNameIsValid && enteredNameTouched;
 
-  const formIsValid = enteredNameIsValid;
+  const [enteredEmail, setEnteredEmail] = useState('');
+  const [enteredEmailTouched, setEnteredEmailTouched] = useState(false);
+
+  const enteredEmailIsValid =
+    enteredEmail.trim().indexOf('@') >= 0 && enteredEmail.trim() !== '';
+  const emailInputIsInvalid = !enteredEmailIsValid && enteredEmailTouched;
+
+  const formIsValid = enteredNameIsValid && enteredEmailIsValid;
 
   const nameInputChangeHandler = ({ target }) => setEnteredName(target.value);
 
   const nameInputBlurHandler = () => setEnteredNameTouched(true);
 
+  const emailInputChangeHandler = ({ target }) => setEnteredEmail(target.value);
+
+  const emailInputBlurHandler = () => setEnteredEmailTouched(true);
+
   const formSubmissionHandler = (event) => {
     event.preventDefault();
 
-    if (!enteredNameIsValid) return;
+    if (!formIsValid) return;
 
-    console.log(enteredName);
+    console.log({ name: enteredName, email: enteredEmail });
 
     setEnteredName('');
     setEnteredNameTouched(false);
+    setEnteredEmail('');
+    setEnteredEmailTouched(false);
   };
 
   const nameInputClasses = !nameInputIsInvalid
+    ? 'form-control'
+    : 'form-control invalid';
+
+  const emailInputClasses = !emailInputIsInvalid
     ? 'form-control'
     : 'form-control invalid';
 
@@ -40,7 +57,22 @@ const SimpleInput = () => {
           onBlur={nameInputBlurHandler}
         />
         {nameInputIsInvalid && (
-          <p className="error-text">Name must not br empty.</p>
+          <p className="error-text">Name must not be empty.</p>
+        )}
+      </div>
+      <div className={emailInputClasses}>
+        <label htmlFor="email">Your E-mail</label>
+        <input
+          type="email"
+          id="email"
+          value={enteredEmail}
+          onChange={emailInputChangeHandler}
+          onBlur={emailInputBlurHandler}
+        />
+        {emailInputIsInvalid && (
+          <p className="error-text">
+            Email must not be empty and need contains &lsquo;@&rsquo;.
+          </p>
         )}
       </div>
       <div className="form-actions">
