@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import useInput from '../hooks/useInput';
 
@@ -11,18 +11,16 @@ const SimpleInput = () => {
     inputBlurHandler: nameBlurHandler,
     reset: resetNameInput,
   } = useInput((value) => value.trim() !== '');
-
-  const [enteredEmail, setEnteredEmail] = useState('');
-  const [enteredEmailTouched, setEnteredEmailTouched] = useState(false);
-
-  const enteredEmailIsValid = enteredEmail.includes('@');
-  const emailInputIsInvalid = !enteredEmailIsValid && enteredEmailTouched;
+  const {
+    value: enteredEmail,
+    isValid: enteredEmailIsValid,
+    hasError: emailInputHasError,
+    valueChangeHandler: emailChangeHandler,
+    inputBlurHandler: emailBlurHandler,
+    reset: resetEmailInput,
+  } = useInput((value) => value.includes('@'));
 
   const formIsValid = enteredNameIsValid && enteredEmailIsValid;
-
-  const emailInputChangeHandler = ({ target }) => setEnteredEmail(target.value);
-
-  const emailInputBlurHandler = () => setEnteredEmailTouched(true);
 
   const formSubmissionHandler = (event) => {
     event.preventDefault();
@@ -32,15 +30,14 @@ const SimpleInput = () => {
     console.log({ name: enteredName, email: enteredEmail });
 
     resetNameInput();
-    setEnteredEmail('');
-    setEnteredEmailTouched(false);
+    resetEmailInput();
   };
 
   const nameInputClasses = !nameInputHasError
     ? 'form-control'
     : 'form-control invalid';
 
-  const emailInputClasses = !emailInputIsInvalid
+  const emailInputClasses = !emailInputHasError
     ? 'form-control'
     : 'form-control invalid';
 
@@ -65,10 +62,10 @@ const SimpleInput = () => {
           type="email"
           id="email"
           value={enteredEmail}
-          onChange={emailInputChangeHandler}
-          onBlur={emailInputBlurHandler}
+          onChange={emailChangeHandler}
+          onBlur={emailBlurHandler}
         />
-        {emailInputIsInvalid && (
+        {emailInputHasError && (
           <p className="error-text">Please enter a valid e-mail.</p>
         )}
       </div>
